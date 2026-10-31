@@ -38,3 +38,14 @@ def test_attribution_credits_each_order_to_exactly_one_channel(con):
     assert one(con, "select count(*) from attributed_orders") == orders
     assert one(con, "select count(distinct order_id) from attributed_orders") == orders
     assert one(con, "select sum(signups) from mart_channel_performance") == orders
+
+
+def test_state_availability_and_usage_are_population_weighted(con):
+    expected = con.execute("""
+        SELECT st, sum(avail * pop) / sum(CASE WHEN avail IS NOT NULL THEN pop END) AS avail_w,
+                   sum(usage * pop) / sum(CASE WHEN usage IS NOT NULL THEN pop END) AS usage_w
+        FROM stg_county GROUP BY st""").df().set_index("st")
+    got = con.execute("select st, avail_fcc, usage_ms from mart_state_rollup").df().set_index("st")
+    for st in expected.index:
+        assert abs(got.loc[st, "avail_fcc"] - expected.loc[st, "avail_w"]) < 1e-9, st
+        assert abs(got.loc[st, "usage_ms"] - expected.loc[st, "usage_w"]) < 1e-9, st
