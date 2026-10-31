@@ -25,9 +25,14 @@ def _market_arrays(con):
 
 
 def _estimate(arrs):
+    """Difference-in-differences on log sign-up rates.  Each group is compared with ITS OWN pre-flight rate, so
+    the permanent gap between the groups (they were not randomized) drops out, and so does any season effect
+    that hits both groups.  exp(DiD) - 1 is the relative lift."""
     t, h = arrs["treated"], arrs["holdout"]
     rate = lambda a, col, weeks: a[:, col].sum() / (a[:, 0].sum() * weeks) * 1e4
-    return rate(t, 2, len(FLIGHT)) / rate(h, 2, len(FLIGHT)) - 1
+    did = (np.log(rate(t, 2, len(FLIGHT)) / rate(t, 1, len(PRE)))
+           - np.log(rate(h, 2, len(FLIGHT)) / rate(h, 1, len(PRE))))
+    return np.exp(did) - 1
 
 
 def mail_lift(con, n_boot=400, seed=7):
@@ -39,7 +44,7 @@ def mail_lift(con, n_boot=400, seed=7):
         s = {g: a[rng.integers(0, len(a), len(a))] for g, a in arrs.items()}
         boots.append(_estimate(s))
     lo, hi = np.percentile(boots, [2.5, 97.5])
-    return {"lift": float(est), "ci_low": float(lo), "ci_high": float(hi), "method": "treated vs holdout during flight"}
+    return {"lift": float(est), "ci_low": float(lo), "ci_high": float(hi), "method": "difference-in-differences on log rates, bootstrap over markets"}
 
 
 def truth():
