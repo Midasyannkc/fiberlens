@@ -18,3 +18,11 @@ def test_market_arrays_are_ordered_by_market_so_the_bootstrap_cannot_depend_on_s
     keys = con.execute("select w.fips, e.grp from fct_market_week w join stg_experiment e on e.fips = w.fips group by all order by w.fips").df()
     for g, arr in a.items():
         assert len(arr) == (keys["grp"] == g).sum() == len(pops[g])
+
+
+def test_lift_estimate_recovers_the_true_effect_despite_biased_market_selection(con):
+    from fiberlens.lift import truth
+    r = mail_lift(con)
+    assert abs(r["lift"] - truth()) < 0.04
+    assert r["ci_low"] <= truth() <= r["ci_high"]
+    assert r["ci_low"] > 0  # the campaign did work, and the interval should say so
