@@ -49,3 +49,14 @@ def test_state_availability_and_usage_are_population_weighted(con):
     for st in expected.index:
         assert abs(got.loc[st, "avail_fcc"] - expected.loc[st, "avail_w"]) < 1e-9, st
         assert abs(got.loc[st, "usage_ms"] - expected.loc[st, "usage_w"]) < 1e-9, st
+
+
+def test_cost_per_signup_is_total_spend_over_total_signups(con):
+    rows = con.execute("select channel, spend, signups, cost_per_signup from mart_channel_performance where spend > 0").fetchall()
+    assert len(rows) == 6
+    for channel, spend, signups, cps in rows:
+        assert abs(cps - spend / signups) < 1e-6, channel
+
+
+def test_organic_has_no_cost_per_signup(con):
+    assert con.execute("select cost_per_signup from mart_channel_performance where channel = 'organic'").fetchone()[0] is None
