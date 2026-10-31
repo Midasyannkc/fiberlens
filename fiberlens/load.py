@@ -38,6 +38,7 @@ def read_population():
 
 def read_unemployment():
     df = pd.read_csv(os.path.join(RAW, "bls_unemp_2016.csv"), dtype={"fips": str})
+    df["fips"] = df["fips"].map(to_fips)
     return df.rename(columns={"unemp": "unemp_2016"})
 
 
