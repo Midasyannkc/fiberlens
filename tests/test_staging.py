@@ -23,3 +23,9 @@ def test_score_rises_with_the_unrealized_demand_gap(con):
 
 def test_counties_missing_availability_are_excluded_not_scored(con):
     assert one(con, "select count(*) from mart_opportunity_score where avail is null or usage is null") == 0
+
+
+def test_market_opportunity_mart_has_one_row_per_county_and_keeps_population(con):
+    assert one(con, "select count(*) from mart_market_opportunity") == one(con, "select count(*) from stg_county")
+    assert one(con, "select count(distinct fips) from mart_market_opportunity") == one(con, "select count(*) from mart_market_opportunity")
+    assert one(con, "select sum(pop) from mart_market_opportunity") == one(con, "select sum(pop) from stg_county")
