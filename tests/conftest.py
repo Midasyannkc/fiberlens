@@ -14,3 +14,9 @@ def synthetic_data():
     if not os.path.exists(os.path.join(SYN, "truth.json")):
         subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "gen_synthetic.py")], check=True)
     return SYN
+
+
+@pytest.fixture(scope="session")
+def con(synthetic_data):
+    from fiberlens.pipeline import build
+    return build()
