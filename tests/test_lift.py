@@ -26,3 +26,8 @@ def test_lift_estimate_recovers_the_true_effect_despite_biased_market_selection(
     assert abs(r["lift"] - truth()) < 0.04
     assert r["ci_low"] <= truth() <= r["ci_high"]
     assert r["ci_low"] > 0  # the campaign did work, and the interval should say so
+
+
+def test_the_naive_comparison_is_far_from_the_truth_which_is_why_it_is_not_used(con):
+    from fiberlens.lift import naive_lift, truth
+    assert abs(naive_lift(con) - truth()) > 0.10

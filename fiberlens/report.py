@@ -37,7 +37,7 @@ def build_report(con):
         "anomalies": anomalies,
         "root_cause": [anomaly.explain_week(con, a["week"]) for a in anomalies],
         "channels": chan.round(2).to_dict("records"),
-        "lift": {**lf, "true": lift.truth(), "flight_treated_orders": flight_orders, "incremental_orders": incremental,
+        "lift": {**lf, "true": lift.truth(), "naive": lift.naive_lift(con), "flight_treated_orders": flight_orders, "incremental_orders": incremental,
                  "mail_spend": mail_spend, "cost_per_incremental_order": mail_spend / incremental if incremental > 0 else None},
         "competitive": competitive.competitive_effect(con),
         "survey": sv,

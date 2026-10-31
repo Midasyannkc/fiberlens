@@ -35,6 +35,14 @@ def _estimate(arrs):
     return np.exp(did) - 1
 
 
+def naive_lift(con):
+    """The comparison the business first made: treated vs holdout rate during the flight, ignoring their pre-flight gap.
+    Kept only to show how far off it is; do not use it for decisions."""
+    arrs = _market_arrays(con)
+    rate = lambda a: a[:, 2].sum() / (a[:, 0].sum() * len(FLIGHT)) * 1e4
+    return float(rate(arrs["treated"]) / rate(arrs["holdout"]) - 1)
+
+
 def mail_lift(con, n_boot=400, seed=7):
     arrs = _market_arrays(con)
     est = _estimate(arrs)
