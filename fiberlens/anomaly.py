@@ -2,19 +2,22 @@
 import numpy as np
 
 
-def find_anomalies(values, window=9, z=4.0):
-    """Robust z-score of each point against the rolling median of its neighbours (centered window)."""
+def find_anomalies(values, window=9, z=4.0, min_rel=0.05):
+    """Robust z-score of each point against the rolling median of its neighbours (centered window).
+    A point must also be at least `min_rel` away from that median, so a very smooth series cannot flag tiny wiggles."""
     x = np.asarray(values, float)
     half = window // 2
     out = []
     resid = np.zeros(len(x))
+    ref = np.zeros(len(x))
     for i in range(len(x)):
         lo, hi = max(0, i - half), min(len(x), i + half + 1)
         neigh = np.delete(x[lo:hi], i - lo)
-        resid[i] = x[i] - np.median(neigh)
+        ref[i] = np.median(neigh)
+        resid[i] = x[i] - ref[i]
     mad = np.median(np.abs(resid - np.median(resid))) * 1.4826
     for i, r in enumerate(resid):
-        if mad > 0 and abs(r / mad) > z:
+        if mad > 0 and abs(r / mad) > z and abs(r) >= min_rel * abs(ref[i]):
             out.append({"index": i, "week": i + 1, "value": float(x[i]), "z": round(float(r / mad), 1)})
     return out
 
