@@ -9,3 +9,12 @@ def test_lift_result_has_an_interval_that_brackets_the_estimate(con):
 
 def test_lift_is_reproducible_for_a_fixed_seed(con):
     assert mail_lift(con, n_boot=50, seed=3) == mail_lift(con, n_boot=50, seed=3)
+
+
+def test_market_arrays_are_ordered_by_market_so_the_bootstrap_cannot_depend_on_scan_order(con):
+    from fiberlens.lift import _market_arrays
+    a = _market_arrays(con)
+    pops = {g: arr[:, 0] for g, arr in a.items()}
+    keys = con.execute("select w.fips, e.grp from fct_market_week w join stg_experiment e on e.fips = w.fips group by all order by w.fips").df()
+    for g, arr in a.items():
+        assert len(arr) == (keys["grp"] == g).sum() == len(pops[g])

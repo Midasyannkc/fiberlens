@@ -19,7 +19,8 @@ def _market_arrays(con):
                sum(CASE WHEN w.week BETWEEN 1 AND 19 THEN w.orders END) AS pre,
                sum(CASE WHEN w.week BETWEEN 20 AND 31 THEN w.orders END) AS flight
         FROM fct_market_week w JOIN stg_experiment e ON e.fips = w.fips
-        GROUP BY w.fips, e.grp""").df()
+        GROUP BY w.fips, e.grp
+        ORDER BY w.fips""").df()
     return {g: d[["pop", "pre", "flight"]].to_numpy(float) for g, d in df.groupby("grp")}
 
 
