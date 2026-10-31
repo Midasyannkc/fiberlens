@@ -46,6 +46,17 @@ def build_report(con):
     }
 
 
+def _clean(x):
+    """Strict JSON has no NaN: a missing number becomes null so the deck builder and any other reader can parse it."""
+    if isinstance(x, float) and x != x:
+        return None
+    if isinstance(x, dict):
+        return {k: _clean(v) for k, v in x.items()}
+    if isinstance(x, list):
+        return [_clean(v) for v in x]
+    return x
+
+
 def save(report):
     os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)
-    json.dump(report, open(os.path.join(ROOT, "out", "report.json"), "w"), indent=2, default=str)
+    json.dump(_clean(report), open(os.path.join(ROOT, "out", "report.json"), "w"), indent=2, default=str, allow_nan=False)

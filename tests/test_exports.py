@@ -56,3 +56,10 @@ def test_excel_pack_recalculates_to_the_pipeline_numbers_with_no_errors(con, rep
     assert abs(wb["Lift"]["B10"].value - report["lift"]["naive"]) < 1e-9
     assert max(abs(wb["Opportunity"].cell(r, 16).value) for r in range(5, 105)) < 1e-9
     assert abs(wb["Survey"]["B7"].value - report["survey"]["intent_weighted"]) < 1e-9
+
+
+def test_saved_report_is_strict_json(report):
+    import json
+    from fiberlens.report import save
+    save(report)
+    json.loads(open(os.path.join(ROOT, "out", "report.json")).read(), parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))

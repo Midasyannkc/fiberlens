@@ -1,4 +1,4 @@
-.PHONY: install data test report incidents verify
+.PHONY: install data test report incidents verify deck
 install:
 	pip install -r requirements.txt --break-system-packages
 data:
@@ -12,3 +12,6 @@ incidents:
 	python3 scripts/incidents.py
 verify:
 	python3 scripts/verify_incidents.py
+
+deck:
+	NODE_PATH=$$(npm root -g) node deck/build_deck.js
