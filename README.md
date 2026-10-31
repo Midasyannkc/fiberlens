@@ -82,10 +82,10 @@ Every incident has two commits: one adds a test that fails for the right reason,
 <!-- incidents:start -->
 | # | Incident | Found by | Reproduce | Fix |
 | --- | --- | --- | --- | --- |
-| INC-1 | Order credit was counted twice because every touch earned a full sign-up | a test that channel totals must equal orders | `94a5642` | `87cb715` |
-| INC-2 | Joining ZIP rows to counties multiplied US population by 43 | a test that the county mart keeps one row per county and the same total population | `cf5665b` | `a7202d8` |
-| INC-3 | Leading-zero FIPS codes silently dropped unemployment for 317 counties | a coverage test on the Alabama join | `8c90dad` | `f4ce7df` |
-| INC-4 | State availability was a plain average of counties, so Texas looked 12 points worse than it is | an independent population-weighted recomputation from the county table | `6cc6a46` | `4602daf` |
-| INC-5 | Comparing treated with holdout markets read the mail flight as no effect | a test that the lift estimate recovers the known simulated effect | `a1c2c1a` | `3197f08` |
-| INC-6 | Cost per sign-up averaged ratios instead of dividing total spend by total sign-ups | a test that cost per sign-up equals spend over sign-ups for each channel | `6bd194a` | `c883031` |
+| INC-1 | Order credit was counted twice because every touch earned a full sign-up | a test that channel totals must equal orders | `b427d34` | `ce3182a` |
+| INC-2 | Joining ZIP rows to counties multiplied US population by 43 | a test that the county mart keeps one row per county and the same total population | `0a342d6` | `ec2a1ec` |
+| INC-3 | Leading-zero FIPS codes silently dropped unemployment for 317 counties | a coverage test on the Alabama join | `4159dc5` | `24a9c49` |
+| INC-4 | State availability was a plain average of counties, so Texas looked 12 points worse than it is | an independent population-weighted recomputation from the county table | `2704ba7` | `7cb3233` |
+| INC-5 | Comparing treated with holdout markets read the mail flight as no effect | a test that the lift estimate recovers the known simulated effect | `828facf` | `26747e3` |
+| INC-6 | Cost per sign-up averaged ratios instead of dividing total spend by total sign-ups | a test that cost per sign-up equals spend over sign-ups for each channel | `8eb3dcd` | `c00f75e` |
 <!-- incidents:end -->
