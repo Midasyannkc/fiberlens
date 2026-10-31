@@ -31,3 +31,10 @@ def test_market_week_grid_is_complete(con):
 
 def test_experiment_groups_are_disjoint(con):
     assert one(con, "select count(*) from stg_experiment") == one(con, "select count(distinct fips) from stg_experiment") == 180
+
+
+def test_attribution_credits_each_order_to_exactly_one_channel(con):
+    orders = one(con, "select count(*) from stg_orders")
+    assert one(con, "select count(*) from attributed_orders") == orders
+    assert one(con, "select count(distinct order_id) from attributed_orders") == orders
+    assert one(con, "select sum(signups) from mart_channel_performance") == orders
