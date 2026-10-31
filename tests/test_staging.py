@@ -36,3 +36,11 @@ def test_unemployment_joins_for_nearly_every_county_including_states_with_leadin
     assert missing <= 0.01 * one(con, "select count(*) from stg_county")
     # Alabama is state FIPS 01: its counties are the ones that silently vanish when the leading zero is lost
     assert one(con, "select count(*) from stg_county where st = 'AL' and unemp_2016 is null") == 0
+
+
+def test_tier_a_is_selective(con):
+    n = one(con, "select count(*) from mart_opportunity_score where tier = 'A'")
+    total = one(con, "select count(*) from mart_opportunity_score")
+    assert 0.05 * total < n < 0.15 * total
+    assert one(con, "select min(score) from mart_opportunity_score where tier = 'A'") >= 0.80
+    assert one(con, "select max(score) from mart_opportunity_score where tier = 'B'") < 0.80
