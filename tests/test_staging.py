@@ -29,3 +29,10 @@ def test_market_opportunity_mart_has_one_row_per_county_and_keeps_population(con
     assert one(con, "select count(*) from mart_market_opportunity") == one(con, "select count(*) from stg_county")
     assert one(con, "select count(distinct fips) from mart_market_opportunity") == one(con, "select count(*) from mart_market_opportunity")
     assert one(con, "select sum(pop) from mart_market_opportunity") == one(con, "select sum(pop) from stg_county")
+
+
+def test_unemployment_joins_for_nearly_every_county_including_states_with_leading_zero_fips(con):
+    missing = one(con, "select count(*) from stg_county where unemp_2016 is null")
+    assert missing <= 0.01 * one(con, "select count(*) from stg_county")
+    # Alabama is state FIPS 01: its counties are the ones that silently vanish when the leading zero is lost
+    assert one(con, "select count(*) from stg_county where st = 'AL' and unemp_2016 is null") == 0
