@@ -26,6 +26,7 @@ TARGET = {"search": 45, "social": 30, "email": 6, "tv": 35, "door_to_door": 80}
 MAIL_SPEND = 60.0
 FLIGHT = (20, 31)
 OUTAGE_WEEK = 38
+OUTAGE_FACTOR = 0.30
 PLANS = {"300M": 55, "1G": 75, "2G": 110}
 AGES = ["18-34", "35-54", "55+"]
 POP_AGE = np.array([0.30, 0.35, 0.35])
@@ -93,7 +94,7 @@ def main():
                 eff[ch] = EFFECT[ch] * sat(s / scale, ch) if s > 0 else 0.0
             lam = scale * r["base_rate"] * season(w) * np.prod([1 + e for e in eff.values()])
             if w == OUTAGE_WEEK and r["st"] == top_state:
-                lam *= 0.55
+                lam *= OUTAGE_FACTOR
             n = int(rng.poisson(lam))
             weights = np.array([eff[c] for c in CHANNELS])
             p_marketing = weights.sum() / (1 + weights.sum())
@@ -134,7 +135,7 @@ def main():
     mail_pop = float(np.mean([1 + EFFECT["direct_mail"] * sat(MAIL_SPEND, "direct_mail")]))
     truth = {"seed": SEED, "provider": "Northwind Broadband (fictional)", "markets": int(len(m)),
              "mail_lift_true": mail_pop - 1, "flight_weeks": list(FLIGHT), "outage_week": OUTAGE_WEEK, "outage_state": top_state,
-             "outage_factor": 0.55, "survey_population_intent_mean": truth_intent,
+             "outage_factor": OUTAGE_FACTOR, "survey_population_intent_mean": truth_intent,
              "population_age_shares": dict(zip(AGES, POP_AGE.tolist())), "comp_a_effect": -0.30, "comp_b_effect": -0.15,
              "treated_mean_avail": float(tr["avail"].mean()),
              "holdout_mean_avail": float(m[m.fips.isin(set(exp.loc[exp.grp == "holdout", "fips"]))]["avail"].mean())}
