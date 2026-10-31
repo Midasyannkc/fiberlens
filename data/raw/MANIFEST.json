@@ -1,0 +1,30 @@
+{
+  "ms_county.csv": {
+    "url": "https://raw.githubusercontent.com/microsoft/USBroadbandUsagePercentages/master/dataset/broadband_data_2020October.csv",
+    "what": "Microsoft AI for Good: county broadband availability (FCC Form 477) and usage, Oct 2020",
+    "bytes": 117343,
+    "lines": 3143,
+    "sha256": "40f99fb2b13152bc8ab44d76dcb4166eca32cbfdacb22f276eb14972bc1a33af"
+  },
+  "ms_zip.csv": {
+    "url": "https://raw.githubusercontent.com/microsoft/USBroadbandUsagePercentages/master/dataset/broadband_data_zipcode.csv",
+    "what": "Microsoft AI for Good: ZIP-level broadband usage with error ranges",
+    "bytes": 1491827,
+    "lines": 32736,
+    "sha256": "e7775788f381b21f028596386d4479e7a79989d8b19748931632cfd2b484d0a4"
+  },
+  "jhu_uid.csv": {
+    "url": "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv",
+    "what": "JHU CSSE lookup table: county FIPS and population (US Census based)",
+    "bytes": 416410,
+    "lines": 4322,
+    "sha256": "80bbd734ae7547dac8915d0960d01f43975c817bcddebebd19c026718a1368db"
+  },
+  "bls_unemp_2016.csv": {
+    "url": "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv",
+    "what": "BLS LAUS 2016 county unemployment rate, as published in the plotly datasets repo",
+    "bytes": 32336,
+    "lines": 3220,
+    "sha256": "1e532fdfaf33d7a5ae34b5a84debdca80a136acf539a25078a38a9a218d7623a"
+  }
+}
